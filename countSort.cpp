@@ -1,6 +1,7 @@
 /*
 Description
 sort an random array which only has small range of integer elements using count sort
+O(n)
 */
 #include <iostream>
 #include <algorithm>
