@@ -9,44 +9,45 @@ Description: DP is a method to solve optimal problem,the problem should has two 
 using namespace std;
 /*matrix-chain multiplicion,*/
 /*split rod,get most profit*/
-void printOptimalSolution(vector<int> s, int n){
+void printOptimalSolution(vector<int> solution, int n){
 	while(n>0){
-		cout<<s[n]<<endl;
-		n=n-s[n];
+		cout<<solution[n]<<endl;
+		n=n-solution[n];
 	}
 }
-int cutRodMemoUpBottom(int n,vector< int> price,vector<int> &r, vector<int> &s){
-	if(r[n]>=0)
-		return r[n];
+
+int cutRodMemoUpBottom(int n,vector< int> price,vector<int> &opProfit, vector<int> &solution){
+	if(opProfit[n]>=0)
+		return opProfit[n];
 	int max=-1;
 	int q;
 	if(n==0)
 		return 0;
 	int i;
 	for(i=1;i<=n;i++){
-		q=price[i]+cutRodMemoUpBottom(n-i,price,r,s);
+		q=price[i]+cutRodMemoUpBottom(n-i,price,opProfit,solution);
 		if(max<q){
 			max=q;
-			s[n]=i;
+			solution[n]=i;
 		}
 	}
 	
-	r[n]=max;
+	opProfit[n]=max;
 	
-	return r[n];
+	return opProfit[n];
 }
 /*method 1: use up to bottom method, n is lengh of rod, use recurse*/
 int cutRodMemo(int n,vector<int> price){
-	vector<int> r;//r[i] stroe the optimal profit when n=i
-	vector<int> s;//s[i] stroe the optimal solution when n=i
-	for(int i=0;i<=n;i++){//r.size()=n+1
-		r.push_back(-1);
-		s.push_back(-1);
+	vector<int> opProfit;//opProfit[i] stroe the optimal profit when n=i
+	vector<int> solution;//solution[i] stroe the optimal solution when n=i
+	for(int i=0;i<=n;i++){//opProfit.size()=n+1
+		opProfit.push_back(-1);
+		solution.push_back(-1);
 	}
 	
-	r[n]=cutRodMemoUpBottom(n,price,r,s);//return r[n]
-	printOptimalSolution(s,n);
-	return r[n];
+	opProfit[n]=cutRodMemoUpBottom(n,price,opProfit,solution);//return opProfit[n]
+	printOptimalSolution(solution,n);
+	return opProfit[n];
 }
 /*mwthod 2: from botoom to up, no recurse. first get max profit when n=1, then when n=2.... */
 int cutRodBottomUp(int n,vector<int> price){
