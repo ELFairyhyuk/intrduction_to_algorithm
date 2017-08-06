@@ -1,3 +1,10 @@
+?/*
+Desccription:
+mergeable heaps: binomial heap, fabonacci heap. their union operation is better than ordinary binary heap(max-heap, min-heap).
+binomial heap is a collection of binomial trees, binomial tree is like a min-heap,  but root must has k children, k is the height, other node has two chlidren
+binomial heap has a head list, consist of all the roots of every binomial tree, 
+and every root of binomial tree should be linked in ordered by its degree. All degrees of roots in head list must be distinct.
+*/
 #include <iostream>
 #include <algorithm>
 #include <math.h>
@@ -11,7 +18,7 @@ struct node{
 	node* sibling;// brother of node immediately to its right
 	node* parent;
 };
-
+/*merge two heaps' head list, put the roots which have same degree together*/
 node* mergeBinomialHeap(node* head1, node* head2){
 	node* h1=head1;
 	node* h2=head2;
@@ -54,6 +61,7 @@ node* mergeBinomialHeap(node* head1, node* head2){
 	}
 	return head1;
 }
+/*first merge two heaps, then merge two roots with same degree recursively, make degree of each root to be distinct */
 node* unionBinomialHeap(node* head1, node*head2){
 	node* h1=mergeBinomialHeap(head1,head2);
 
@@ -104,6 +112,7 @@ node* unionBinomialHeap(node* head1, node*head2){
 
 	return h1;
 }
+/*insert a node into heap. do it like union two heap*/
 node* insertBinomialHeap(node* head, node* n){
 	node* h=n;
 	node* res=unionBinomialHeap(head,h);
@@ -111,22 +120,16 @@ node* insertBinomialHeap(node* head, node* n){
 	return res;
 }
 
-
+/*build a binomial heap*/
 node* buildBinomialHeap(vector<node> &arr){
 	node* head=NULL;
 	for(int i=0;i<arr.size();i++){
 		head=insertBinomialHeap(head,&arr[i]);
 	}
-	node* p=head;
-	    while(p!=NULL){
-     	cout<<"e"<<p->key<<endl;
-     	//cout<<p->sibling->key<<endl;
-         p=p->sibling;
-    }
 	return head;
 }
 
-//decrease dec->key to k in the heap
+/*decrease dec->key to k in the heap*/
 void binomialHeapDecreasingKey(node* head, node* dec, int k){
 	node* parent=dec->parent;
 	node* p=dec;
@@ -139,7 +142,7 @@ void binomialHeapDecreasingKey(node* head, node* dec, int k){
 		parent=p->parent;
 	}
 }
-
+/*delete the minimum node */
 node* deleteMin(node* head){
 	node* p;
 	node* h=NULL;
@@ -185,12 +188,13 @@ node* deleteMin(node* head){
 	head=unionBinomialHeap(head,h);
 	return head;
 }
-
+/*delete a node in the heap, first decrease the key of this node to negetive infinite(i.e. make the key to be minimum ), then call deleteMin*/
 node* binomialHeapDelete(node* head, node* del){
 	//del->key=log(0);
 	binomialHeapDecreasingKey(head,del,log(0));//log_e (0) is a negetive infinite number
 	return deleteMin(head);
 }
+
 int main(){
 	 vector<node> arr;
     for(int i=0;i<10;i++){
